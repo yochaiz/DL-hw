@@ -1,6 +1,7 @@
 # My project's README
 
 local layerSize = {inputSize, 67, 67, 100}
+
 model = nn.Sequential()
 model:add(nn.View(28 * 28)) --reshapes the image into a vector without copy
 for i=1, #layerSize-1 do
