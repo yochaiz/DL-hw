@@ -1,5 +1,4 @@
 local mnist = require 'mnist';
-local mnist = require 'mnist';
 
 local trainData = mnist.traindataset().data:float();
 local trainLabels = mnist.traindataset().label:add(1);
@@ -209,7 +208,7 @@ for i = 1, table.getn(lr) do
 				max_j = j
 				max_k = k
 				
-				gnuplot.pngfigure('test_' .. i .. '_' .. j .. '_' .. k .. '.png')
+				gnuplot.pngfigure('test_' .. lr[i] .. '_' .. moment[j] .. '_' .. wd[k] .. '.png')
 				gnuplot.plot({'trainLoss',trainLoss},{'testLoss',testLoss},{'testError',testError},{'trainError',trainError})
 				gnuplot.xlabel('epochs')
 				gnuplot.ylabel('Loss/Error')
