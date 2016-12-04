@@ -134,6 +134,8 @@ model:add(nn.LogSoftMax())                     -- converts the output to a log-p
 model:cuda()
 criterion = nn.ClassNLLCriterion():cuda()
 
+torch.manualSeed(84015)
+
 --64 channels, 32 kernels, 3x3. 
 
 w, dE_dw = model:getParameters()
@@ -183,10 +185,24 @@ function forwardNet(data,labels, train)
                 return err, dE_dw
             end
         
-            optim.adadelta(feval, w, optimState)
+	    optim.adadelta(feval, w, optimState)
+            --optim.adagrad(feval, w, optimState)
         end
     end
+
+    if train then
+    	lossAcc = 0
     
+    	for i = 1, data:size(1) - batchSize, batchSize do
+        	numBatches = numBatches + 1
+        	local x = data:narrow(1, i, batchSize):cuda()		
+        	local yt = labels:narrow(1, i, batchSize):cuda()
+        	local y = model:forward(x)
+        	local err = criterion:forward(y, yt)
+        	lossAcc = lossAcc + err
+    	end
+    end
+
     confusion:updateValids()
     local avgLoss = lossAcc / numBatches
     local avgError = 1 - confusion.totalValid
@@ -204,34 +220,72 @@ function plotError(trainError, testError, title)
 	gnuplot.plotflush()
 end
 
----------------------------------------------------------------------
-
-epochs = 250
-trainLoss = torch.Tensor(epochs)
-testLoss = torch.Tensor(epochs)
-trainError = torch.Tensor(epochs)
-testError = torch.Tensor(epochs)
-
---reset net weights
-model:apply(function(l) l:reset() end)
-
-timer = torch.Timer()
-
-for e = 1, epochs do
-    trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
-    trainLoss[e], trainError[e] = forwardNet(trainData, trainLabels, true)
-    testLoss[e], testError[e], confusion = forwardNet(testData, testLabels, false)
-    
-    if e % 5 == 0 then
-        print('Epoch ' .. e .. ':')
-        print('Training error: ' .. trainError[e], 'Training Loss: ' .. trainLoss[e])
-        print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
-        print(confusion)
-    end
+function plotLoss(trainLoss, testLoss, title)
+	require 'gnuplot'
+	local range = torch.range(1, trainLoss:size(1))
+	gnuplot.pngfigure('testVsTrainLoss.png')
+	gnuplot.plot({'trainLoss',trainLoss},{'testLoss',testLoss})
+	gnuplot.xlabel('epochs')
+	gnuplot.ylabel('Loss')
+	gnuplot.plotflush()
 end
 
-plotError(trainError, testError, 'Classification Error')
 
+---------------------------------------------------------------------
+
+function train(model, epochs, trainData, trainLabels, testData, testLabels)
+	trainLoss = torch.Tensor(epochs)
+	testLoss = torch.Tensor(epochs)
+	trainError = torch.Tensor(epochs)
+	testError = torch.Tensor(epochs)
+
+	--reset net weights
+	model:apply(function(l) l:reset() end)
+
+	
+	
+	for e = 1, epochs do
+	    trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
+	    timer = torch.Timer()
+	    trainLoss[e], trainError[e] = forwardNet(trainData, trainLabels, true) --train
+	    timer:stop()
+	    print(timer:time())
+
+	    testLoss[e], testError[e], confusion = forwardNet(testData, testLabels, false) --test
+	    
+	    if e % 5 == 0 then
+		print('Epoch ' .. e .. ':')
+		print('Training error: ' .. trainError[e], 'Training Loss: ' .. trainLoss[e])
+		print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
+		print(confusion)
+	    end
+	end
+
+	plotError(trainError, testError, 'Classification Error')
+	plotLoss(trainLoss, testLoss, 'Loss')
+end
+
+function test(testData, testLabels)
+	model = torch.load('model.txt')
+	trainLoss = torch.Tensor(1)
+	testLoss = torch.Tensor(1)
+	trainError = torch.Tensor(1)
+	testError = torch.Tensor(1)
+
+	timer = torch.Timer()
+	testLoss[1], testError[1], confusion = forwardNet(testData, testLabels, false) --test
+	    
+	print('Test error: ' .. testError[1], 'Test Loss: ' .. testLoss[1])
+	print(confusion)
+
+	plotError(trainError, testError, 'Classification Error')
+end
+
+
+train(model, 30, trainData, trainLabels, testData, testLabels)
+torch.save('model.txt', model)
+
+--test(testData, testLabels)
 
 --  ****************************************************************
 --  Network predictions

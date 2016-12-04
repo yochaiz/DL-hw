@@ -1,0 +1,240 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+DL-HW1
+\end_layout
+
+\begin_layout Author
+Shai Vaknin (034658492), Ev Zisselman (200479483), Yochai Zur (03050991)
+ 
+\end_layout
+
+\begin_layout Section*
+Architecture description
+\end_layout
+
+\begin_layout Standard
+Our model is composed of the flowing layers:
+\end_layout
+
+\begin_layout Standard
+Spatial Convolution (1 input channel, 32 kernels, kernel size 5x5) 
+\end_layout
+
+\begin_layout Standard
+2x2 Max pooling
+\end_layout
+
+\begin_layout Standard
+RelU
+\end_layout
+
+\begin_layout Standard
+Batch normalization
+\end_layout
+
+\begin_layout Standard
+Spatial Convolution (32 input channel, 64 kernels, kernel size 3x3) 
+\end_layout
+
+\begin_layout Standard
+2x2 Max pooling
+\end_layout
+
+\begin_layout Standard
+RelU
+\end_layout
+
+\begin_layout Standard
+Batch normalization
+\end_layout
+
+\begin_layout Standard
+Spatial Convolution (64 input channel, 32 kernels, kernel size 3x3) 
+\end_layout
+
+\begin_layout Standard
+2x2 Max pooling
+\end_layout
+
+\begin_layout Standard
+RelU
+\end_layout
+
+\begin_layout Standard
+Batch normalization
+\end_layout
+
+\begin_layout Standard
+Linear (32*3*3 inputs, 90 outputs)
+\end_layout
+
+\begin_layout Standard
+Dropout (p=0.5)
+\end_layout
+
+\begin_layout Standard
+Linear (90 inputs, 10 outputs)
+\end_layout
+
+\begin_layout Standard
+LogSoftMax
+\end_layout
+
+\begin_layout Section*
+Training procedure
+\end_layout
+
+\begin_layout Standard
+For re4gulrization, we used dropout and batch normalization layers.
+ No weight decay.
+\end_layout
+
+\begin_layout Standard
+We have tried to use adagrad and adadelta to train the network.
+\end_layout
+
+\begin_layout Standard
+Figure 1 contain the results of adagrad run.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Adagrad (Final accuracy 99.148637820513%) 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 2 contain the results of Adadelta run.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Adadelta (Final accuracy %)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Summery:
+\end_layout
+
+\begin_layout Standard
+Adadelta achieve better results than Adagrad in a fix time frame.
+ Even though a single epoch of Adagrad (~4.2 seconds) is about ~0.1 second
+ faster than Adadelta (~4.3 seconds), Adadelta require significantly less
+ epoch to converge.
+ Moreover Adadelta achieve error rates Adagrad can only dream of.
+\end_layout
+
+\end_body
+\end_document
