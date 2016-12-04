@@ -22,22 +22,40 @@ end
 
 require 'nn'
 require 'cunn'
+require 'cudnn'
 
-local inputSize = 28*28
+--local inputSize = 28*28
 local outputSize = 10
 -- local layerSize = {inputSize, 64,128,256}
 --local layerSize = {inputSize, 75, 60, 50}
-local layerSize = {inputSize, 67, 67, 100}
+--local layerSize = {inputSize, 67, 67, 100}
 -- local layerSize = {inputSize, 70, 70, 100} -- 98.00 %
 
-model = nn.Sequential()
+local model = nn.Sequential()
+model:add(cudnn.SpatialConvolution(1, 32, 5, 5)) -- 1 input image channel, 32 output channels, 5x5 convolution kernel
+model:add(cudnn.SpatialMaxPooling(2,2,2,2))      -- A max-pooling operation that looks at 2x2 windows and finds the max.
+model:add(cudnn.ReLU(true))                          -- ReLU activation function
+model:add(nn.SpatialBatchNormalization(32))    --Batch normalization will provide quicker convergence
+model:add(cudnn.SpatialConvolution(32, 64, 3, 3))
+model:add(cudnn.SpatialMaxPooling(2,2,2,2))
+model:add(cudnn.ReLU(true))
+model:add(nn.SpatialBatchNormalization(64))
+model:add(cudnn.SpatialConvolution(64, 32, 3, 3))
+model:add(nn.View(32*4*4):setNumInputDims(3))  -- reshapes from a 3D tensor of 32x4x4 into 1D tensor of 32*4*4
+model:add(nn.Linear(32*4*4, 256))             -- fully connected layer (matrix multiplication between input and weights)
+model:add(cudnn.ReLU(true))
+model:add(nn.Dropout(0.5))                      --Dropout layer with p=0.5
+model:add(nn.Linear(256, outputSize))            -- 10 is the number of outputs of the network (in this case, 10 digits)
+model:add(nn.LogSoftMax())
+
+--[[model = nn.Sequential()
 model:add(nn.View(28 * 28)) --reshapes the image into a vector without copy
 -- model:add(nn.Dropout(0.2):cuda(), 8)
 for i=1, #layerSize-1 do
     model:add(nn.Linear(layerSize[i], layerSize[i+1]))	
 	model:add(nn.ReLU())
 	
---[[	local tt = torch.randperm(3);
+	local tt = torch.randperm(3);
 	if tt:select(1,1) == 1 then
 		model:add(nn.ReLU())
 	elseif tt:select(1,1) == 2 then
@@ -45,19 +63,19 @@ for i=1, #layerSize-1 do
 		model:add(nn.Sigmoid())
 	else
 		model:add(nn.Sigmoid())
-	end]]
+	end
 end
 
---[[model:add(nn.Linear(layerSize[1], layerSize[2]))	
+model:add(nn.Linear(layerSize[1], layerSize[2]))	
 model:add(nn.ReLU())
 model:add(nn.Linear(layerSize[2], layerSize[3]))	
 model:add(nn.ReLU())
 model:add(nn.Linear(layerSize[3], layerSize[4]))	
-model:add(nn.ReLU())]]
+model:add(nn.ReLU())
 
 model:add(nn.Linear(layerSize[#layerSize], outputSize))
 model:add(nn.LogSoftMax())   -- f_i(x) = exp(x_i - shift) / sum_j exp(x_j - shift)
-
+-]]
 
 model:cuda() --ship to gpu
 print(tostring(model))
