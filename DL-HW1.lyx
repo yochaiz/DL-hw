@@ -74,7 +74,14 @@ DL-HW1
 
 \begin_layout Author
 Shai Vaknin (034658492), Ev Zisselman (200479483), Yochai Zur (03050991)
- 
+\end_layout
+
+\begin_layout Address
+
+\series bold
+Github link: 
+\series default
+https://github.com/yochaiz/DL-hw
 \end_layout
 
 \begin_layout Section*
@@ -154,47 +161,18 @@ Training procedure
 \end_layout
 
 \begin_layout Standard
-For re4gulrization, we used dropout and batch normalization layers.
+For regularization, we used dropout and batch normalization layers.
  No weight decay.
 \end_layout
 
 \begin_layout Standard
-We have tried to use adagrad and adadelta to train the network.
+We have tried to use Adagrad and Adadelta to train the network.
+ Adagrad reached 99.10% accuracy after 100 epochs, where Adadelta reached
+ 99.379%.
 \end_layout
 
 \begin_layout Standard
-Figure 1 contain the results of adagrad run.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Adagrad (Final accuracy 99.148637820513%) 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Figure 2 contain the results of Adadelta run.
+Figure 1 contain the loss and error plots of Adadelta run.
 \end_layout
 
 \begin_layout Standard
@@ -211,8 +189,28 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Adadelta (Final accuracy %)
+Adadelta (Final accuracy 99.379%)
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename pasted6.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename pasted7.png
+	scale 50
 
 \end_inset
 
@@ -225,7 +223,7 @@ Adadelta (Final accuracy %)
 \end_layout
 
 \begin_layout Section*
-Summery:
+Summary:
 \end_layout
 
 \begin_layout Standard
@@ -234,6 +232,11 @@ Adadelta achieve better results than Adagrad in a fix time frame.
  faster than Adadelta (~4.3 seconds), Adadelta require significantly less
  epoch to converge.
  Moreover Adadelta achieve error rates Adagrad can only dream of.
+\end_layout
+
+\begin_layout Standard
+We also tried using only fully connected network.
+ Best accuracy we got was ~98.5%.
 \end_layout
 
 \end_body
