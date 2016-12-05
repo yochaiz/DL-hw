@@ -40,10 +40,16 @@ local trainLabels = mnist.traindataset().label:add(1);
 local testData = mnist.testdataset().data:float();
 local testLabels = mnist.testdataset().label:add(1);
 
+local mean = trainData:mean()
+local std = trainData:std()
+trainData:add(-mean):div(std); 
+testData:add(-mean):div(std);
+
 trainData = trainData:reshape(trainData:size(1), 1, trainData:size(2), trainData:size(3))
 --trainLabels = trainLabels:reshape(trainLabels:size(1), 1, trainLabels:size(2), trainLabels:size(3))
 testData = testData:reshape(testData:size(1), 1, testData:size(2), testData:size(3))
 --trainData = trainData:reshape(trainData:size(1), 1, trainData:size(2), trainData:size(3))
+
 
 
 print(trainData:size())
@@ -75,7 +81,8 @@ saveTensorAsGrid(output, 'convOut.jpg')
 local weights = conv.weight
 saveTensorAsGrid(weights, 'convWeights.jpg')
 print(weights:size())
-]]
+-]]
+
 --  ****************************************************************
 --  Full Example - Training a ConvNet on Cifar10
 --  ****************************************************************
@@ -187,6 +194,7 @@ function forwardNet(data,labels, train)
         
 	    optim.adadelta(feval, w, optimState)
             --optim.adagrad(feval, w, optimState)
+	    --optim.sgd(feval, w, optimState)
         end
     end
 
@@ -194,7 +202,6 @@ function forwardNet(data,labels, train)
     	lossAcc = 0
     
     	for i = 1, data:size(1) - batchSize, batchSize do
-        	numBatches = numBatches + 1
         	local x = data:narrow(1, i, batchSize):cuda()		
         	local yt = labels:narrow(1, i, batchSize):cuda()
         	local y = model:forward(x)
@@ -204,7 +211,8 @@ function forwardNet(data,labels, train)
     end
 
     confusion:updateValids()
-    local avgLoss = lossAcc / numBatches
+    --local avgLoss = lossAcc / numBatches
+    local avgLoss = lossAcc / data:size(1)
     local avgError = 1 - confusion.totalValid
     
     return avgLoss, avgError, tostring(confusion)
@@ -243,7 +251,8 @@ function train(model, epochs, trainData, trainLabels, testData, testLabels)
 	model:apply(function(l) l:reset() end)
 
 	
-	
+	best_error = 1
+
 	for e = 1, epochs do
 	    trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
 	    timer = torch.Timer()
@@ -259,8 +268,14 @@ function train(model, epochs, trainData, trainLabels, testData, testLabels)
 		print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
 		print(confusion)
 	    end
+
+            if best_error > testError[e] then
+	    	torch.save('model.txt', model)
+		best_error = testError[e]
+	    end
 	end
 
+	print ('Best error ' .. best_error)
 	plotError(trainError, testError, 'Classification Error')
 	plotLoss(trainLoss, testLoss, 'Loss')
 end
@@ -282,10 +297,10 @@ function test(testData, testLabels)
 end
 
 
-train(model, 30, trainData, trainLabels, testData, testLabels)
-torch.save('model.txt', model)
+--train(model, 100, trainData, trainLabels, testData, testLabels)
 
---test(testData, testLabels)
+
+test(testData, testLabels)
 
 --  ****************************************************************
 --  Network predictions
