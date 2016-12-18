@@ -22,8 +22,8 @@ function saveTensorAsGrid(tensor,fileName)
 	image.save(fileName,grid)
 end
 
-local trainset = torch.load('cifar.torch/cifar10-train.t7')
-local testset = torch.load('cifar.torch/cifar10-test.t7')
+local trainset = torch.load('/home/yochaiz@st.technion.ac.il/cifar.torch/cifar10-train.t7')
+local testset = torch.load('/home/yochaiz@st.technion.ac.il/cifar.torch/cifar10-test.t7')
 
 local classes = {'airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'}
 
@@ -35,8 +35,11 @@ local testLabels = testset.label:float():add(1)
 print(trainData:size())
 print(trainLabels:size())
 
-saveTensorAsGrid(trainData:narrow(1,100,36),'train_100-136.jpg') -- display the 100-136 images in dataset
-print(classes[trainLabels[100]]) -- display the 100-th image class
+local prefix = torch.Timer():time().real
+print ('Prefix:[' .. prefix .. ']')
+
+--saveTensorAsGrid(trainData:narrow(1,100,36),'train_100-136.jpg') -- display the 100-136 images in dataset
+--print(classes[trainLabels[100]]) -- display the 100-th image class
 
 
 --  *****************************************************************
@@ -67,9 +70,9 @@ print(weights:size())
 --  ****************************************************************
 
 -- Load and normalize data:
---[[
-local redChannel = trainData[{ {}, {1}, {}, {}  }] -- this picks {all images, 1st channel, all vertical pixels, all horizontal pixels}
-print(#redChannel)
+
+--local redChannel = trainData[{ {}, {1}, {}, {}  }] -- this picks {all images, 1st channel, all vertical pixels, all horizontal pixels}
+--print(#redChannel)
 
 local mean = {}  -- store the mean, to normalize the test set in the future
 local stdv  = {} -- store the standard-deviation for the future
@@ -90,11 +93,12 @@ for i=1,3 do -- over each image channel
     testData[{ {}, {i}, {}, {}  }]:div(stdv[i]) -- std scaling
 end
 
-]]
+
 
 --  ****************************************************************
 --  Define our neural network
 --  ****************************************************************
+--[[local fullyConnectedSize = 80
 
 local model = nn.Sequential()
 model:add(cudnn.SpatialConvolution(3, 32, 5, 5)) -- 3 input image channel, 32 output channels, 5x5 convolution kernel
@@ -107,15 +111,19 @@ model:add(cudnn.ReLU(true))
 model:add(nn.SpatialBatchNormalization(64))
 model:add(cudnn.SpatialConvolution(64, 32, 3, 3))
 model:add(nn.View(32*4*4):setNumInputDims(3))  -- reshapes from a 3D tensor of 32x4x4 into 1D tensor of 32*4*4
-model:add(nn.Linear(32*4*4, 256))             -- fully connected layer (matrix multiplication between input and weights)
+model:add(nn.Linear(32*4*4, fullyConnectedSize))             -- fully connected layer (matrix multiplication between input and weights)
 model:add(cudnn.ReLU(true))
 model:add(nn.Dropout(0.5))                      --Dropout layer with p=0.5
-model:add(nn.Linear(256, #classes))            -- 10 is the number of outputs of the network (in this case, 10 digits)
+model:add(nn.Linear(fullyConnectedSize, #classes))            -- 10 is the number of outputs of the network (in this case, 10 digits)
 model:add(nn.LogSoftMax())                     -- converts the output to a log-probability. Useful for classificati
+]]
 
-model:cuda()
-criterion = nn.ClassNLLCriterion():cuda()
-
+local model = require 'vgg_bn_drop'
+model = model:cuda()
+-- criterion = nn.ClassNLLCriterion():cuda()
+criterion = nn.CrossEntropyCriterion():cuda()
+print('Criterion:')
+print(criterion)
 
 w, dE_dw = model:getParameters()
 print('Number of parameters:', w:nElement())
@@ -148,8 +156,8 @@ function forwardNet(data,labels, train)
         numBatches = numBatches + 1
         local x = data:narrow(1, i, batchSize):cuda()
         local yt = labels:narrow(1, i, batchSize):cuda()
-		print('x:')
-		print(x:size())
+		--print('i: ' .. i)
+		--print(x:size())
         local y = model:forward(x)
         local err = criterion:forward(y, yt)
         lossAcc = lossAcc + err
@@ -163,8 +171,9 @@ function forwardNet(data,labels, train)
             
                 return err, dE_dw
             end
-        
+						
             optim.adam(feval, w, optimState)
+			
         end
     end
     
@@ -186,32 +195,65 @@ function plotError(trainError, testError, title)
 end
 
 ---------------------------------------------------------------------
+function train(model, epochs, trainData, trainLabels, testData, testLabels)
 
-epochs = 25
-trainLoss = torch.Tensor(epochs)
-testLoss = torch.Tensor(epochs)
-trainError = torch.Tensor(epochs)
-testError = torch.Tensor(epochs)
+	trainLoss = torch.Tensor(epochs)
+	testLoss = torch.Tensor(epochs)
+	trainError = torch.Tensor(epochs)
+	testError = torch.Tensor(epochs)
 
---reset net weights
-model:apply(function(l) l:reset() end)
+	--reset net weights
+	-- model:apply(function(l) l:reset() end)
 
-timer = torch.Timer()
+	--timer = torch.Timer()
+	best_error = 1
 
-for e = 1, epochs do
-    trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
-    trainLoss[e], trainError[e] = forwardNet(trainData, trainLabels, true)
-    testLoss[e], testError[e], confusion = forwardNet(testData, testLabels, false)
-    
-    if e % 5 == 0 then
-        print('Epoch ' .. e .. ':')
-        print('Training error: ' .. trainError[e], 'Training Loss: ' .. trainLoss[e])
-        print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
-        print(confusion)
-    end
+	for e = 1, epochs do
+		trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
+		print('e (b) = ' .. e)
+		trainLoss[e], trainError[e] = forwardNet(trainData, trainLabels, true)
+		print('e (a) = ' .. e)
+		testLoss[e], testError[e], confusion = forwardNet(testData, testLabels, false)
+				
+		print('Epoch ' .. e .. ':')
+		print('Training error: ' .. trainError[e], 'Training Loss: ' .. trainLoss[e])
+		print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
+		print(confusion)
+		
+		torch.save('trainError.' .. prefix .. '.txt', trainError)
+		torch.save('testError.' .. prefix .. '.txt', testError)
+		
+		if best_error > testError[e] then
+	    	torch.save('model.' .. prefix .. '.txt', model)
+			best_error = testError[e]
+	    end
+	end
+
+	-- plotError(trainError, testError, 'Classification Error')
+
 end
 
-plotError(trainError, testError, 'Classification Error')
+function test(testData, testLabels)
+	model = torch.load('model.txt')
+	trainLoss = torch.Tensor(1)
+	testLoss = torch.Tensor(1)
+	trainError = torch.Tensor(1)
+	testError = torch.Tensor(1)
+
+	timer = torch.Timer()
+	testLoss[1], testError[1], confusion = forwardNet(testData, testLabels, false) --test
+	    
+	print('Test error: ' .. testError[1], 'Test Loss: ' .. testLoss[1])
+	print(confusion)
+
+	-- plotError(trainError, testError, 'Classification Error')
+end
+
+epochs = 250
+
+train(model, epochs, trainData, trainLabels, testData, testLabels)
+
+--test(testData, testLabels)
 
 --  ****************************************************************
 --  Network predictions
