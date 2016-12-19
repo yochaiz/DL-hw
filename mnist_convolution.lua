@@ -15,6 +15,8 @@ require 'image'
 require 'nn'
 require 'cunn'
 require 'cudnn'
+require 'seboost_parallel_simulation'
+--require 'avrage_parallel_simulation'
 
 function saveTensorAsGrid(tensor,fileName) 
 	local padding = 1
@@ -122,6 +124,7 @@ local outputSize = 10
 fullySize = 90
 
 local model = nn.Sequential()
+
 model:add(cudnn.SpatialConvolution(1, 32, 5, 5)) -- 1 input image channel, 32 output channels, 5x5 convolution kernel
 model:add(cudnn.SpatialMaxPooling(2,2,2,2))      -- A max-pooling operation that looks at 2x2 windows and finds the max.
 model:add(cudnn.ReLU(true))                          -- ReLU activation function
@@ -141,7 +144,7 @@ model:add(nn.LogSoftMax())                     -- converts the output to a log-p
 model:cuda()
 criterion = nn.ClassNLLCriterion():cuda()
 
-torch.manualSeed(84015)
+
 
 --64 channels, 32 kernels, 3x3. 
 
@@ -151,18 +154,92 @@ print(model)
 
 function shuffle(data,ydata) --shuffle data function
     local RandOrder = torch.randperm(data:size(1)):long()
+    --print(RandOrder)
     return data:index(1,RandOrder), ydata:index(1,RandOrder)
+end
+
+function getCurriculum(data, labels)
+    local lossAcc = 0
+    local numBatches = 0
+    model:evaluate() 
+    loss = torch.Tensor(data:size(1))
+    local batchSize = 128
+    for i = 1, data:size(1) - batchSize, batchSize do
+        numBatches = numBatches + 1
+        local x = data:narrow(1, i, batchSize):cuda()		
+        local yt = labels:narrow(1, i, batchSize):cuda()
+        local y = model:forward(x)
+
+	--print(y:size())
+	for j=1,y:size(1) do
+        	local err = criterion:forward(y[j], yt[j])
+		--print ('batchSize = ' .. batchSize .. ', j = ' .. j .. ', numBatches = ' .. numBatches)
+		--print((numBatches - 1)*batchSize + j)
+		loss[(numBatches - 1)*batchSize + j] = err
+	end
+
+
+    end
+    --print (loss)
+    
+    y,i = torch.sort(loss)
+
+    return data:index(1,i), labels:index(1,i)
+end
+
+function loadCurriculum(data, labels)
+	i = torch.load('curriculum.txt')
+
+	--1000 random swaps	
+	local k=1000
+	for j=1,k do
+		local i1 = (torch.random() % data:size(1)) + 1
+		local i2 = (torch.random() % data:size(1)) + 1
+		local temp = i[i1]
+		i[i1] = i[i2]
+		i[i2] = temp
+	end
+	return data:index(1,i), labels:index(1,i)
+end
+
+function dumpCurriculum(data, labels)
+    local lossAcc = 0
+    local numBatches = 0
+    model:evaluate() 
+    loss = torch.Tensor(data:size(1))
+    local batchSize = 128
+    for i = 1, data:size(1) - batchSize, batchSize do
+        numBatches = numBatches + 1
+        local x = data:narrow(1, i, batchSize):cuda()		
+        local yt = labels:narrow(1, i, batchSize):cuda()
+        local y = model:forward(x)
+
+	--print(y:size())
+	for j=1,y:size(1) do
+        	local err = criterion:forward(y[j], yt[j])
+		--print ('batchSize = ' .. batchSize .. ', j = ' .. j .. ', numBatches = ' .. numBatches)
+		--print((numBatches - 1)*batchSize + j)
+		loss[(numBatches - 1)*batchSize + j] = err
+	end
+
+
+    end
+    --print (loss)
+    
+    y,i = torch.sort(loss)
+    torch.save('curriculum.txt', i)
+
+    return data:index(1,i), labels:index(1,i)
 end
 
 --  ****************************************************************
 --  Training the network
 --  ****************************************************************
 require 'optim'
-
+--learningRate=0.05
 local batchSize = 128
-local optimState = {}
 
-function forwardNet(data,labels, train)
+function forwardNet(data, labels, train)
     --another helpful function of optim is ConfusionMatrix
     local confusion = optim.ConfusionMatrix(torch.range(0,9):totable())
     local lossAcc = 0
@@ -183,8 +260,22 @@ function forwardNet(data,labels, train)
         lossAcc = lossAcc + err
         confusion:batchAdd(y,yt)
         
+        --w, dE_dw = model:getParameters()
         if train then
-            function feval()
+            --w, inputs, targets
+            function feval(_w, inputs, targets)
+              
+                if w ~= _w then 
+                  --because we use (*) to calc f(x), we need to make sure the model has the current parameters
+                  --to calc f(_w) and not f(w)
+                  w:copy(_w) --Needs to be copied before eval
+                end
+            
+                local x = inputs or x --take inputs in case of sesop and x incase of baseMethod.
+                local yt = targets or yt
+                local y = model:forward(x) --(*)
+                local err = criterion:forward(y, yt)
+                
                 model:zeroGradParameters() --zero grads
                 local dE_dy = criterion:backward(y,yt)
                 model:backward(x, dE_dy) -- backpropagation
@@ -192,7 +283,10 @@ function forwardNet(data,labels, train)
                 return err, dE_dw
             end
         
-	    optim.adadelta(feval, w, optimState)
+      --giving w to adadelta allows it to change it inplace.
+	    --optim.adadelta(feval, w, optimState)
+      
+	    optim.seboost(feval, w, sesopConfig, optimState)
             --optim.adagrad(feval, w, optimState)
 	    --optim.sgd(feval, w, optimState)
         end
@@ -218,15 +312,83 @@ function forwardNet(data,labels, train)
     return avgLoss, avgError, tostring(confusion)
 end
 
-function plotError(trainError, testError, title)
-	require 'gnuplot'
-	local range = torch.range(1, trainError:size(1))
-	gnuplot.pngfigure('testVsTrainError.png')
-	gnuplot.plot({'trainError',trainError},{'testError',testError})
-	gnuplot.xlabel('epochs')
-	gnuplot.ylabel('Error')
-	gnuplot.plotflush()
+---------------------------------------------------------------------
+
+function train(epochs, trainData, trainLabels, testData, testLabels)
+  
+  trainLoss = {}
+  testLoss = {}
+  trainError = {}
+  testError = {}
+  epochTimes = {}
+  
+  for numOfNodes = 1, 5 do
+    optimState = {}
+    sesopConfig = {
+      --optMethod=optim.adadelta, 
+      optMethod=optim.adagrad, 
+      histSize=10,
+      sesopData=trainData,
+      sesopLabels=trainLabels,
+      isCuda=true,
+      optConfig={}, --state for the inner optimization function.
+      sesopUpdate=400, --sesop iteration every 400 'optMethod' iterations.
+      sesopBatchSize=1000,
+      numNodes=math.pow(2, numOfNodes - 1),
+      nodeIters=math.ceil(100/numOfNodes),
+    }
+
+    epochTimes[sesopConfig.numNodes] = torch.Tensor(epochs + 1)
+    trainLoss[sesopConfig.numNodes] = torch.Tensor(epochs + 1)
+    testLoss[sesopConfig.numNodes] = torch.Tensor(epochs + 1)
+    trainError[sesopConfig.numNodes] = torch.Tensor(epochs + 1)
+    testError[sesopConfig.numNodes] = torch.Tensor(epochs + 1)
+
+    torch.manualSeed(8765467)
+    model:apply(function(l) l:reset() end)
+    
+    testLoss[sesopConfig.numNodes][1], testError[sesopConfig.numNodes][1], confusion = forwardNet(testData, testLabels, false) 
+    
+    best_error = 1
+
+    for e = 1, epochs*sesopConfig.numNodes do
+        e = math.ceil(e/sesopConfig.numNodes)
+        trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
+        --trainData, trainLabels = loadCurriculum(trainData, trainLabels)
+        print('e = ' .. e)
+        timer = torch.Timer()
+        trainLoss[sesopConfig.numNodes][e + 1], trainError[sesopConfig.numNodes][e + 1] = forwardNet(trainData, trainLabels, true) --train
+        timer:stop()
+        epochTimes[sesopConfig.numNodes][e + 1] = timer:time().real
+  
+        testLoss[sesopConfig.numNodes][e + 1], testError[sesopConfig.numNodes][e + 1], confusion = forwardNet(testData, testLabels, false) --test
+       
+        if e % 5 == 0 then
+          print('Epoch ' .. e .. ':')
+          print('Training error: ' .. trainError[sesopConfig.numNodes][e + 1], 'Training Loss: ' .. trainLoss[sesopConfig.numNodes][e + 1])
+          print('Test error: ' .. testError[sesopConfig.numNodes][e + 1], 'Test Loss: ' .. testLoss[sesopConfig.numNodes][e + 1])
+          print(confusion)
+        end
+
+        if best_error > testError[sesopConfig.numNodes][e + 1] then
+          torch.save('model.txt', model)
+          best_error = testError[sesopConfig.numNodes][e + 1]
+          --dumpCurriculum(trainData, trainLabels)
+        end
+        torch.save('testError.txt', testError)
+        torch.save('trainError.txt', trainError)
+        torch.save('epochTimes.txt', epochTimes)
+          
+    end
+
+    --print ('Best error ' .. (1 - best_error))
+    --plotLoss(trainLoss[sesopConfig.numNodes], testLoss[sesopConfig.numNodes], 'Loss')
+    
+  end
+  --plotError(trainError, testError, 'Classification Error')
+  --plotTimeToAccuracy(testError, 'Time to acc')
 end
+
 
 function plotLoss(trainLoss, testLoss, title)
 	require 'gnuplot'
@@ -238,47 +400,67 @@ function plotLoss(trainLoss, testLoss, title)
 	gnuplot.plotflush()
 end
 
-
----------------------------------------------------------------------
-
-function train(model, epochs, trainData, trainLabels, testData, testLabels)
-	trainLoss = torch.Tensor(epochs)
-	testLoss = torch.Tensor(epochs)
-	trainError = torch.Tensor(epochs)
-	testError = torch.Tensor(epochs)
-
-	--reset net weights
-	model:apply(function(l) l:reset() end)
-
-	
-	best_error = 1
-
-	for e = 1, epochs do
-	    trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
-	    timer = torch.Timer()
-	    trainLoss[e], trainError[e] = forwardNet(trainData, trainLabels, true) --train
-	    timer:stop()
-	    print(timer:time())
-
-	    testLoss[e], testError[e], confusion = forwardNet(testData, testLabels, false) --test
-	    
-	    if e % 5 == 0 then
-		print('Epoch ' .. e .. ':')
-		print('Training error: ' .. trainError[e], 'Training Loss: ' .. trainLoss[e])
-		print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
-		print(confusion)
-	    end
-
-            if best_error > testError[e] then
-	    	torch.save('model.txt', model)
-		best_error = testError[e]
-	    end
-	end
-
-	print ('Best error ' .. best_error)
-	plotError(trainError, testError, 'Classification Error')
-	plotLoss(trainLoss, testLoss, 'Loss')
+function plotTimeToAccuracy(testError, title)
+  require 'gnuplot'
+  gnuplot.pngfigure('timeToAccuracy.png')
+  gnuplot.xlabel('Number of nodes')
+  gnuplot.ylabel('Time (epochs)')
+  
+  local testErrorSize = 0
+  for numOfNodes, error in pairs(testError) do 
+    testErrorSize = testErrorSize + 1
+  end
+  
+  timeToAccuracy = torch.Tensor(testErrorSize)
+  epochs = torch.Tensor(testErrorSize)
+  
+  for numOfNodes = 1, testErrorSize do
+    epochs[numOfNodes] = math.pow(2, numOfNodes - 1)
+    for time = 1, testError[numOfNodes]:size(1) do
+      
+      if (testError[numOfNodes][time] < 0.007) then
+        timeToAccuracy[numOfNodes] = time
+        break
+      end
+      
+    end
+    
+  end
+  
+  gnuplot.plot({'Time to accuracy 0.007', timeToAccuracy})
+  gnuplot.plotflush()
 end
+
+function plotError(trainError, testError, title)
+	require 'gnuplot'
+  gnuplot.pngfigure('testVsTrainError.png')
+  
+  --for numOfNodes, error in pairs(testError) do 
+    --local range = torch.range(1, error:size(1))  
+    --gnuplot.plot({'testError(' .. numOfNodes .. ')', error})
+  --end
+  
+  gnuplot.plot({'testError(1)', testError[1]}, 
+    {'testError(2)', testError[2]},
+    {'testError(4)', testError[3]},
+    {'testError(8)', testError[4]})
+  
+  --gnuplot.plot({'testError(1)', testError[1]}, 
+  --  {'testError(2)', testError[2]})
+  
+  gnuplot.xlabel('epochs')
+  gnuplot.ylabel('Error')
+  gnuplot.plotflush()
+    --[[
+	local range = torch.range(1, trainError:size(1))
+	gnuplot.pngfigure('testVsTrainError.png')
+	gnuplot.plot({'trainError',trainError},{'testError',testError})
+	gnuplot.xlabel('epochs')
+	gnuplot.ylabel('Error')
+	gnuplot.plotflush()
+  ]]
+end
+
 
 function test(testData, testLabels)
 	model = torch.load('model.txt')
@@ -297,10 +479,8 @@ function test(testData, testLabels)
 end
 
 
---train(model, 100, trainData, trainLabels, testData, testLabels)
-
-
-test(testData, testLabels)
+train(7, trainData, trainLabels, testData, testLabels)
+--test(testData, testLabels)
 
 --  ****************************************************************
 --  Network predictions
