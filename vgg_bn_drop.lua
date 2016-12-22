@@ -23,7 +23,7 @@ local MaxPooling = nn.SpatialMaxPooling
 
 local drop1 = 0.3
 local drop2 = 0.4
-local drop3 = 0.25
+local drop3 = 0.5
 
 ConvBNReLU(3,depth1):add(nn.Dropout(drop1))
 ConvBNReLU(depth1,depth1)
@@ -69,10 +69,18 @@ local function MSRinit(net)
     end
   end
   -- have to do for both backends
-  init'nn.SpatialConvolution'
+  init('nn.SpatialConvolution')
+end
+
+local function FCinit(net,name)
+	for k,v in pairs(net:findModules(name))
+		v.bias:zero()
+		v.weight:zero()
+	end
 end
 
 MSRinit(vgg)
+-- FCinit(vgg,'nn.Linear')
 
 -- check that we can propagate forward without errors
 -- should get 16x10 tensor

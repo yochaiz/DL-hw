@@ -35,8 +35,9 @@ local testLabels = testset.label:float():add(1)
 print(trainData:size())
 print(trainLabels:size())
 
-local prefix = torch.Timer():time().real
-print ('Prefix:[' .. prefix .. ']')
+--local prefix = torch.Timer():time().real
+local prefix = torch.rand(1)
+print ('Prefix:[' .. prefix[1] .. ']')
 
 --saveTensorAsGrid(trainData:narrow(1,100,36),'train_100-136.jpg') -- display the 100-136 images in dataset
 --print(classes[trainLabels[100]]) -- display the 100-th image class
@@ -118,8 +119,115 @@ model:add(nn.Linear(fullyConnectedSize, #classes))            -- 10 is the numbe
 model:add(nn.LogSoftMax())                     -- converts the output to a log-probability. Useful for classificati
 ]]
 
-local model = require 'vgg_bn_drop'
-model = model:cuda()
+--local model = require 'vgg_bn_drop'
+
+--[[local nin = require 'nin'
+local model = nin()
+]]
+
+local opt = {
+  num_classes = 10,
+  save = 'logs',
+  batchSize = 128,
+  learningRate = 0.1,
+  learningRateDecay = 0,
+  learningRateDecayRatio = 0.2,
+  weightDecay = 0.0005,
+  dampening = 0,
+  momentum = 0.9,
+  epoch_step = "80",
+  max_epoch = 300,
+  model = 'nin',
+  optimMethod = 'sgd',
+  init_value = 10,
+  depth = 4,
+  shortcutType = 'A',
+  nesterov = false,
+  dropout = 0,
+  hflip = true,
+  randomcrop = 4,
+  imageSize = 32,
+  randomcrop_type = 'zero',
+  cudnn_deterministic = false,
+  optnet_optimize = true,
+  generate_graph = false,
+  multiply_input_factor = 1,
+  widen_factor = 0.8,
+  nGPU = 1,
+  data_type = 'torch.CudaTensor',
+  seed = 444,
+  type = 'cuda'
+}
+
+local resnet = require 'wide-resnet'
+
+
+do -- data augmentation module
+  local BatchFlip,parent = torch.class('nn.BatchFlip', 'nn.Module')
+
+  function BatchFlip:__init()
+    parent.__init(self)
+    self.train = true
+  end
+
+  function BatchFlip:updateOutput(input)
+    if self.train then
+		local permutation = torch.randperm(input:size(1))
+		for i=1,input:size(1) do		
+			if 0 == permutation[i] % 3  then
+				image.hflip(input[i], input[i])
+			end -- need to define f
+			
+			if 1 == permutation[i] % 3  then
+				module = nn.SpatialReflectionPadding(pad,pad,pad,pad):float() 
+				local padded = module:forward(im:float())
+				local x = torch.random(1,pad*2 + 1)
+				local y = torch.random(1,pad*2 + 1)
+
+				return padded:narrow(3,x,im:size(3)):narrow(2,y,im:size(2))
+			end -- need to define g
+		end
+      
+	  --[[local bs = input:size(1)
+      local flip_mask = torch.randperm(bs):le(bs/2)
+      for i=1,input:size(1) do
+        if flip_mask[i] == 1 then 
+			image.hflip(input[i], input[i])
+			
+		end
+      end]]
+	  
+    end
+	
+    self.output:set(input)
+    return self.output
+  end
+end
+
+local function cast(t)
+	print(t)
+   if opt.type == 'cuda' then
+      require 'cunn'
+      return t:cuda()
+   elseif opt.type == 'float' then
+      return t:float()
+   elseif opt.type == 'cl' then
+      require 'clnn'
+      return t:cl()
+   else
+      error('Unknown type '..opt.type)
+   end
+end
+
+local model = nn.Sequential()
+model:add(nn.BatchFlip():float())
+model:add(cast(nn.Copy('torch.FloatTensor', torch.type(cast(torch.Tensor())))))
+model:add(cast(resnet(opt)))
+model:get(2).updateGradInput = function(input) return end
+
+--local model = resnet(opt)
+
+--model = model:cuda()
 -- criterion = nn.ClassNLLCriterion():cuda()
 criterion = nn.CrossEntropyCriterion():cuda()
 print('Criterion:')
@@ -154,8 +262,8 @@ function forwardNet(data,labels, train)
     end
     for i = 1, data:size(1) - batchSize, batchSize do
         numBatches = numBatches + 1
-        local x = data:narrow(1, i, batchSize):cuda()
-        local yt = labels:narrow(1, i, batchSize):cuda()
+        local x = data:narrow(1, i, batchSize)
+        local yt = labels:narrow(1, i, batchSize)
 		--print('i: ' .. i)
 		--print(x:size())
         local y = model:forward(x)
@@ -220,11 +328,11 @@ function train(model, epochs, trainData, trainLabels, testData, testLabels)
 		print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
 		print(confusion)
 		
-		torch.save('trainError.' .. prefix .. '.txt', trainError)
-		torch.save('testError.' .. prefix .. '.txt', testError)
+		torch.save('trainError.' .. prefix[1] .. '.txt', trainError)
+		torch.save('testError.' .. prefix[1] .. '.txt', testError)
 		
 		if best_error > testError[e] then
-	    	torch.save('model.' .. prefix .. '.txt', model)
+	    	torch.save('model.' .. prefix[1] .. '.txt', model)
 			best_error = testError[e]
 	    end
 	end
