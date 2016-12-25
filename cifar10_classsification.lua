@@ -143,7 +143,7 @@ local opt = {
   depth = 4,
   shortcutType = 'A',
   nesterov = false,
-  dropout = 0,
+  dropout = 0.3,
   hflip = true,
   randomcrop = 4,
   imageSize = 32,
@@ -168,37 +168,36 @@ do -- data augmentation module
   function BatchFlip:__init()
     parent.__init(self)
     self.train = true
+	self.pad = 25
   end
 
+  function BatchFlip:crop(im)
+	module = nn.SpatialReflectionPadding(self.pad,self.pad,self.pad,self.pad):float() 
+	local padded = module:forward(im:float())
+	local x = torch.random(1,self.pad*2 + 1)
+	local y = torch.random(1,self.pad*2 + 1)
+
+	return padded:narrow(3,x,im:size(3)):narrow(2,y,im:size(2))
+  end
+  
   function BatchFlip:updateOutput(input)
     if self.train then
-		local permutation = torch.randperm(input:size(1))
-		for i=1,input:size(1) do		
+		-- saveTensorAsGrid(input,'aug_before.jpg')
+		local permutation = torch.randperm(input:size(1))		
+		for i=1,input:size(1) do
+			-- print(input[i]:size())
 			if 0 == permutation[i] % 3  then
-				image.hflip(input[i], input[i])
+				image.vflip(input[i], input[i])				
 			end -- need to define f
 			
 			if 1 == permutation[i] % 3  then
-				module = nn.SpatialReflectionPadding(pad,pad,pad,pad):float() 
-				local padded = module:forward(im:float())
-				local x = torch.random(1,pad*2 + 1)
-				local y = torch.random(1,pad*2 + 1)
-
-				return padded:narrow(3,x,im:size(3)):narrow(2,y,im:size(2))
+				input[i] = self:crop(input[i])
+				image.hflip(input[i], input[i])
 			end -- need to define g
 		end
-      
-	  --[[local bs = input:size(1)
-      local flip_mask = torch.randperm(bs):le(bs/2)
-      for i=1,input:size(1) do
-        if flip_mask[i] == 1 then 
-			image.hflip(input[i], input[i])
-			
-		end
-      end]]
-	  
-    end
+    end	
 	
+	--saveTensorAsGrid(input,'aug_after.jpg')
     self.output:set(input)
     return self.output
   end
@@ -225,9 +224,10 @@ model:add(cast(nn.Copy('torch.FloatTensor', torch.type(cast(torch.Tensor())))))
 model:add(cast(resnet(opt)))
 model:get(2).updateGradInput = function(input) return end
 
---local model = resnet(opt)
+--[[ local model = resnet(opt)
+model = model:cuda()
+]]
 
---model = model:cuda()
 -- criterion = nn.ClassNLLCriterion():cuda()
 criterion = nn.CrossEntropyCriterion():cuda()
 print('Criterion:')
@@ -262,8 +262,8 @@ function forwardNet(data,labels, train)
     end
     for i = 1, data:size(1) - batchSize, batchSize do
         numBatches = numBatches + 1
-        local x = data:narrow(1, i, batchSize)
-        local yt = labels:narrow(1, i, batchSize)
+        local x = data:narrow(1, i, batchSize) -- :cuda()
+        local yt = labels:narrow(1, i, batchSize) -- :cuda()
 		--print('i: ' .. i)
 		--print(x:size())
         local y = model:forward(x)
@@ -357,7 +357,7 @@ function test(testData, testLabels)
 	-- plotError(trainError, testError, 'Classification Error')
 end
 
-epochs = 250
+epochs = 300
 
 train(model, epochs, trainData, trainLabels, testData, testLabels)
 
