@@ -169,6 +169,7 @@ do -- data augmentation module
     parent.__init(self)
     self.train = true
 	self.pad = 25
+	self.mod = 3
   end
 
   function BatchFlip:crop(im)
@@ -186,14 +187,16 @@ do -- data augmentation module
 		local permutation = torch.randperm(input:size(1))		
 		for i=1,input:size(1) do
 			-- print(input[i]:size())
-			if 0 == permutation[i] % 3  then
-				image.vflip(input[i], input[i])				
+			if 0 == permutation[i] % self.mod  then
+				-- image.hflip(input[i], input[i])
+				input[i] = self:crop(input[i])				
 			end -- need to define f
 			
-			if 1 == permutation[i] % 3  then
-				input[i] = self:crop(input[i])
+			--[[if 1 == permutation[i] % self.mod  then
+				-- input[i] = self:crop(input[i])
 				image.hflip(input[i], input[i])
 			end -- need to define g
+			]]
 		end
     end	
 	
