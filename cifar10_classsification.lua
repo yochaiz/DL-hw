@@ -188,8 +188,8 @@ do -- data augmentation module
 		for i=1,input:size(1) do
 			-- print(input[i]:size())
 			if 0 == permutation[i] % self.mod  then
-				-- image.hflip(input[i], input[i])
-				input[i] = self:crop(input[i])				
+				image.hflip(input[i], input[i])
+				-- input[i] = self:crop(input[i])				
 			end -- need to define f
 			
 			--[[if 1 == permutation[i] % self.mod  then
