@@ -364,7 +364,7 @@ epochs = 300
 
 train(model, epochs, trainData, trainLabels, testData, testLabels)
 
---test(testData, testLabels)
+-- test(testData, testLabels)
 
 --  ****************************************************************
 --  Network predictions
