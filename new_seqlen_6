@@ -1,0 +1,1441 @@
+[?1034h{
+   batchSize : 32
+   batchsize : 32
+   bn : true
+   cuda : true
+   cutoff : -1
+   device : 1
+   dropout : 0.3
+   earlystop : 100
+   gru : false
+   hiddensize : {140}
+   id : ""
+   inputsize : 140
+   lstm : true
+   maxepoch : 1000
+   maxnormout : -1
+   minlr : 1e-05
+   momentum : 0.9
+   progress : false
+   saturate : 400
+   savepath : "/home/yochaiz@st.technion.ac.il/hw3/save/rnnlm"
+   seqlen : 6
+   silent : false
+   startlr : 0.05
+   trainsize : -1
+   uniform : 0.1
+   validsize : -1
+}	
+opt.id:[ptb:ml10:1485099782:1]	
+29048	
+82429	
+73759	
+Vocabulary size : 10000	
+Train set split into 32 sequences of length 29048	
+Language Model:	
+Number of parameters:	2970440	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> output]
+  (1): nn.LookupTable
+  (2): nn.Dropout(0.3, busy)
+  (3): nn.SplitTable
+  (4): nn.Sequencer @ nn.Recursor @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> (4) -> output]
+    (1): nn.FastLSTM(140 -> 140)
+    (2): nn.Dropout(0.3, busy)
+    (3): nn.Linear(140 -> 10000)
+    (4): nn.LogSoftMax
+  }
+}
+Criterion:	
+nn.ClassNLLCriterion
+	
+Epoch #1 :	
+learning rate	0.049875025	
+Speed : 0.005395 sec/batch 	
+Training PPL : 836.9078739453	
+Validation PPL : 681.0496189748	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #2 :	
+learning rate	0.04975005	
+Speed : 0.005578 sec/batch 	
+Training PPL : 594.62926032265	
+Validation PPL : 462.24286666684	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #3 :	
+learning rate	0.049625075	
+Speed : 0.011237 sec/batch 	
+Training PPL : 450.39321561373	
+Validation PPL : 367.38073148206	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #4 :	
+learning rate	0.0495001	
+Speed : 0.012693 sec/batch 	
+Training PPL : 380.02915187303	
+Validation PPL : 316.81367829121	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #5 :	
+learning rate	0.049375125	
+Speed : 0.012933 sec/batch 	
+Training PPL : 334.36793908197	
+Validation PPL : 281.23623193106	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #6 :	
+learning rate	0.04925015	
+Speed : 0.012794 sec/batch 	
+Training PPL : 299.97820137656	
+Validation PPL : 256.40579772511	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #7 :	
+learning rate	0.049125175	
+Speed : 0.012503 sec/batch 	
+Training PPL : 273.83201143366	
+Validation PPL : 235.4746356257	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #8 :	
+learning rate	0.0490002	
+Speed : 0.012268 sec/batch 	
+Training PPL : 252.93673313629	
+Validation PPL : 221.09862381576	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #9 :	
+learning rate	0.048875225	
+Speed : 0.011938 sec/batch 	
+Training PPL : 236.15100807351	
+Validation PPL : 209.23386533409	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #10 :	
+learning rate	0.04875025	
+Speed : 0.011675 sec/batch 	
+Training PPL : 222.10474012752	
+Validation PPL : 199.08569079805	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #11 :	
+learning rate	0.048625275	
+Speed : 0.011470 sec/batch 	
+Training PPL : 210.5363802851	
+Validation PPL : 190.79452804924	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #12 :	
+learning rate	0.0485003	
+Speed : 0.011315 sec/batch 	
+Training PPL : 200.28862820556	
+Validation PPL : 183.67012749198	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #13 :	
+learning rate	0.048375325	
+Speed : 0.011363 sec/batch 	
+Training PPL : 191.48155419411	
+Validation PPL : 177.0083975695	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #14 :	
+learning rate	0.04825035	
+Speed : 0.011552 sec/batch 	
+Training PPL : 184.02391152763	
+Validation PPL : 171.76553337517	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #15 :	
+learning rate	0.048125375	
+Speed : 0.011716 sec/batch 	
+Training PPL : 177.0747733183	
+Validation PPL : 166.61662374692	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #16 :	
+learning rate	0.0480004	
+Speed : 0.011929 sec/batch 	
+Training PPL : 170.6060358203	
+Validation PPL : 161.77742718997	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #17 :	
+learning rate	0.047875425	
+Speed : 0.014744 sec/batch 	
+Training PPL : 165.16996046937	
+Validation PPL : 158.09808590051	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #18 :	
+learning rate	0.04775045	
+Speed : 0.014738 sec/batch 	
+Training PPL : 160.03390126828	
+Validation PPL : 154.7294415038	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #19 :	
+learning rate	0.047625475	
+Speed : 0.014362 sec/batch 	
+Training PPL : 155.52440981237	
+Validation PPL : 151.23483296994	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #20 :	
+learning rate	0.0475005	
+Speed : 0.013954 sec/batch 	
+Training PPL : 151.01875798124	
+Validation PPL : 148.3216902581	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #21 :	
+learning rate	0.047375525	
+Speed : 0.013459 sec/batch 	
+Training PPL : 147.27462177355	
+Validation PPL : 145.59477591207	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #22 :	
+learning rate	0.04725055	
+Speed : 0.013357 sec/batch 	
+Training PPL : 143.40399159191	
+Validation PPL : 143.25237582277	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #23 :	
+learning rate	0.047125575	
+Speed : 0.013040 sec/batch 	
+Training PPL : 140.19911345638	
+Validation PPL : 140.74765777787	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #24 :	
+learning rate	0.0470006	
+Speed : 0.012711 sec/batch 	
+Training PPL : 137.1507745211	
+Validation PPL : 139.16856065109	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #25 :	
+learning rate	0.046875625	
+Speed : 0.013004 sec/batch 	
+Training PPL : 134.26230815319	
+Validation PPL : 137.36127548024	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #26 :	
+learning rate	0.04675065	
+Speed : 0.013222 sec/batch 	
+Training PPL : 131.50240825135	
+Validation PPL : 135.54270304154	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #27 :	
+learning rate	0.046625675	
+Speed : 0.013460 sec/batch 	
+Training PPL : 129.06349343417	
+Validation PPL : 134.24234780645	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #28 :	
+learning rate	0.0465007	
+Speed : 0.013634 sec/batch 	
+Training PPL : 126.70067929123	
+Validation PPL : 132.83608582967	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #29 :	
+learning rate	0.046375725	
+Speed : 0.013900 sec/batch 	
+Training PPL : 124.59270295346	
+Validation PPL : 131.53243120351	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #30 :	
+learning rate	0.04625075	
+Speed : 0.014145 sec/batch 	
+Training PPL : 122.64301213681	
+Validation PPL : 130.44141140061	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #31 :	
+learning rate	0.046125775	
+Speed : 0.014533 sec/batch 	
+Training PPL : 120.81172306621	
+Validation PPL : 129.34908069308	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #32 :	
+learning rate	0.0460008	
+Speed : 0.012389 sec/batch 	
+Training PPL : 118.93905860161	
+Validation PPL : 128.10577338717	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #33 :	
+learning rate	0.045875825	
+Speed : 0.011235 sec/batch 	
+Training PPL : 117.33050595328	
+Validation PPL : 127.43033430302	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #34 :	
+learning rate	0.04575085	
+Speed : 0.011005 sec/batch 	
+Training PPL : 115.83374246449	
+Validation PPL : 126.60845927728	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #35 :	
+learning rate	0.045625875	
+Speed : 0.010681 sec/batch 	
+Training PPL : 114.1774678352	
+Validation PPL : 126.05391947667	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #36 :	
+learning rate	0.0455009	
+Speed : 0.010412 sec/batch 	
+Training PPL : 112.94087952806	
+Validation PPL : 124.94333655624	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #37 :	
+learning rate	0.045375925	
+Speed : 0.010124 sec/batch 	
+Training PPL : 111.56565724112	
+Validation PPL : 124.5990821759	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #38 :	
+learning rate	0.04525095	
+Speed : 0.010371 sec/batch 	
+Training PPL : 110.44259241032	
+Validation PPL : 123.77596408012	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #39 :	
+learning rate	0.045125975	
+Speed : 0.010661 sec/batch 	
+Training PPL : 108.96630519886	
+Validation PPL : 123.02689783758	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #40 :	
+learning rate	0.045001	
+Speed : 0.011012 sec/batch 	
+Training PPL : 107.88545611208	
+Validation PPL : 122.43258568315	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #41 :	
+learning rate	0.044876025	
+Speed : 0.011475 sec/batch 	
+Training PPL : 106.80554996358	
+Validation PPL : 122.18639688662	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #42 :	
+learning rate	0.04475105	
+Speed : 0.011827 sec/batch 	
+Training PPL : 105.8678653661	
+Validation PPL : 121.84329940725	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #43 :	
+learning rate	0.044626075	
+Speed : 0.012347 sec/batch 	
+Training PPL : 104.74655307693	
+Validation PPL : 121.30405498448	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #44 :	
+learning rate	0.0445011	
+Speed : 0.012217 sec/batch 	
+Training PPL : 103.97171444217	
+Validation PPL : 120.40641644598	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #45 :	
+learning rate	0.044376125	
+Speed : 0.011989 sec/batch 	
+Training PPL : 103.04163960096	
+Validation PPL : 120.05506044058	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #46 :	
+learning rate	0.04425115	
+Speed : 0.011663 sec/batch 	
+Training PPL : 102.12780248946	
+Validation PPL : 119.83112695189	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #47 :	
+learning rate	0.044126175	
+Speed : 0.011380 sec/batch 	
+Training PPL : 101.37270900165	
+Validation PPL : 119.72193715933	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #48 :	
+learning rate	0.0440012	
+Speed : 0.011158 sec/batch 	
+Training PPL : 100.37306229768	
+Validation PPL : 119.10100198277	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #49 :	
+learning rate	0.043876225	
+Speed : 0.010864 sec/batch 	
+Training PPL : 99.762340784657	
+Validation PPL : 118.75027477034	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #50 :	
+learning rate	0.04375125	
+Speed : 0.010845 sec/batch 	
+Training PPL : 99.005580904565	
+Validation PPL : 118.82494128068	
+	
+Epoch #51 :	
+learning rate	0.043626275	
+Speed : 0.011092 sec/batch 	
+Training PPL : 98.411877012679	
+Validation PPL : 118.30389564413	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #52 :	
+learning rate	0.0435013	
+Speed : 0.011236 sec/batch 	
+Training PPL : 97.687682726891	
+Validation PPL : 117.93881686983	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #53 :	
+learning rate	0.043376325	
+Speed : 0.011508 sec/batch 	
+Training PPL : 97.008542572049	
+Validation PPL : 117.63638275755	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #54 :	
+learning rate	0.04325135	
+Speed : 0.011782 sec/batch 	
+Training PPL : 96.304993416257	
+Validation PPL : 117.39656213816	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #55 :	
+learning rate	0.043126375	
+Speed : 0.012108 sec/batch 	
+Training PPL : 95.688140380101	
+Validation PPL : 117.23579592787	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #56 :	
+learning rate	0.0430014	
+Speed : 0.012005 sec/batch 	
+Training PPL : 95.158024092241	
+Validation PPL : 116.88368639381	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #57 :	
+learning rate	0.042876425	
+Speed : 0.011673 sec/batch 	
+Training PPL : 94.699164760542	
+Validation PPL : 116.8214334582	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #58 :	
+learning rate	0.04275145	
+Speed : 0.011492 sec/batch 	
+Training PPL : 94.184803651529	
+Validation PPL : 116.43356105306	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #59 :	
+learning rate	0.042626475	
+Speed : 0.011124 sec/batch 	
+Training PPL : 93.521697056867	
+Validation PPL : 116.32234333944	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #60 :	
+learning rate	0.0425015	
+Speed : 0.010911 sec/batch 	
+Training PPL : 92.917705396887	
+Validation PPL : 116.5749758033	
+	
+Epoch #61 :	
+learning rate	0.042376525	
+Speed : 0.010512 sec/batch 	
+Training PPL : 92.437464094835	
+Validation PPL : 116.02208987724	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #62 :	
+learning rate	0.04225155	
+Speed : 0.010382 sec/batch 	
+Training PPL : 91.838452048155	
+Validation PPL : 115.94967936904	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #63 :	
+learning rate	0.042126575	
+Speed : 0.010607 sec/batch 	
+Training PPL : 91.489058597003	
+Validation PPL : 115.8142056814	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #64 :	
+learning rate	0.0420016	
+Speed : 0.010843 sec/batch 	
+Training PPL : 91.087969854989	
+Validation PPL : 115.81426385887	
+	
+Epoch #65 :	
+learning rate	0.041876625	
+Speed : 0.011218 sec/batch 	
+Training PPL : 90.519962720902	
+Validation PPL : 115.63071914509	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #66 :	
+learning rate	0.04175165	
+Speed : 0.011721 sec/batch 	
+Training PPL : 90.239999135732	
+Validation PPL : 115.24786995986	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #67 :	
+learning rate	0.041626675	
+Speed : 0.012189 sec/batch 	
+Training PPL : 89.750174636131	
+Validation PPL : 115.30087489493	
+	
+Epoch #68 :	
+learning rate	0.0415017	
+Speed : 0.012372 sec/batch 	
+Training PPL : 89.296672860192	
+Validation PPL : 115.18396576678	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #69 :	
+learning rate	0.041376725	
+Speed : 0.012190 sec/batch 	
+Training PPL : 88.904135387997	
+Validation PPL : 114.94924259941	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #70 :	
+learning rate	0.04125175	
+Speed : 0.011957 sec/batch 	
+Training PPL : 88.469839997915	
+Validation PPL : 115.10400438074	
+	
+Epoch #71 :	
+learning rate	0.041126775	
+Speed : 0.011700 sec/batch 	
+Training PPL : 88.253818250894	
+Validation PPL : 114.90179015171	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #72 :	
+learning rate	0.0410018	
+Speed : 0.011508 sec/batch 	
+Training PPL : 87.699715216139	
+Validation PPL : 114.88215992872	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #73 :	
+learning rate	0.040876825	
+Speed : 0.011162 sec/batch 	
+Training PPL : 87.465590120385	
+Validation PPL : 114.67529397992	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #74 :	
+learning rate	0.04075185	
+Speed : 0.011144 sec/batch 	
+Training PPL : 87.127015023043	
+Validation PPL : 114.6706264339	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #75 :	
+learning rate	0.040626875	
+Speed : 0.011359 sec/batch 	
+Training PPL : 86.685211366248	
+Validation PPL : 115.02310991705	
+	
+Epoch #76 :	
+learning rate	0.0405019	
+Speed : 0.011611 sec/batch 	
+Training PPL : 86.40480811912	
+Validation PPL : 114.72035805259	
+	
+Epoch #77 :	
+learning rate	0.040376925	
+Speed : 0.011860 sec/batch 	
+Training PPL : 86.074776351175	
+Validation PPL : 114.33477412884	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #78 :	
+learning rate	0.04025195	
+Speed : 0.012204 sec/batch 	
+Training PPL : 85.73081626443	
+Validation PPL : 114.19180499997	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #79 :	
+learning rate	0.040126975	
+Speed : 0.012483 sec/batch 	
+Training PPL : 85.502831703559	
+Validation PPL : 114.23642669338	
+	
+Epoch #80 :	
+learning rate	0.040002	
+Speed : 0.012727 sec/batch 	
+Training PPL : 85.167267590207	
+Validation PPL : 114.32105587599	
+	
+Epoch #81 :	
+learning rate	0.039877025	
+Speed : 0.012502 sec/batch 	
+Training PPL : 84.790823083124	
+Validation PPL : 114.11717579807	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #82 :	
+learning rate	0.03975205	
+Speed : 0.012302 sec/batch 	
+Training PPL : 84.577610535502	
+Validation PPL : 113.89253295685	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #83 :	
+learning rate	0.039627075	
+Speed : 0.012001 sec/batch 	
+Training PPL : 84.292544996784	
+Validation PPL : 113.97699681553	
+	
+Epoch #84 :	
+learning rate	0.0395021	
+Speed : 0.011637 sec/batch 	
+Training PPL : 83.990548269116	
+Validation PPL : 113.89887691406	
+	
+Epoch #85 :	
+learning rate	0.039377125	
+Speed : 0.011157 sec/batch 	
+Training PPL : 83.564138627883	
+Validation PPL : 113.79966475034	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #86 :	
+learning rate	0.03925215	
+Speed : 0.011022 sec/batch 	
+Training PPL : 83.382342363489	
+Validation PPL : 113.81832690652	
+	
+Epoch #87 :	
+learning rate	0.039127175	
+Speed : 0.011117 sec/batch 	
+Training PPL : 83.072962621151	
+Validation PPL : 113.72468855795	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #88 :	
+learning rate	0.0390022	
+Speed : 0.011229 sec/batch 	
+Training PPL : 82.915589016219	
+Validation PPL : 113.46637379535	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #89 :	
+learning rate	0.038877225	
+Speed : 0.011297 sec/batch 	
+Training PPL : 82.548499666731	
+Validation PPL : 113.82755524946	
+	
+Epoch #90 :	
+learning rate	0.03875225	
+Speed : 0.011486 sec/batch 	
+Training PPL : 82.529827975697	
+Validation PPL : 113.66851504504	
+	
+Epoch #91 :	
+learning rate	0.038627275	
+Speed : 0.011599 sec/batch 	
+Training PPL : 82.238244757175	
+Validation PPL : 113.60029740302	
+	
+Epoch #92 :	
+learning rate	0.0385023	
+Speed : 0.011644 sec/batch 	
+Training PPL : 81.907125032734	
+Validation PPL : 113.46277611344	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #93 :	
+learning rate	0.038377325	
+Speed : 0.011234 sec/batch 	
+Training PPL : 81.74804004374	
+Validation PPL : 113.66144501091	
+	
+Epoch #94 :	
+learning rate	0.03825235	
+Speed : 0.010903 sec/batch 	
+Training PPL : 81.506496828961	
+Validation PPL : 113.72858846592	
+	
+Epoch #95 :	
+learning rate	0.038127375	
+Speed : 0.010419 sec/batch 	
+Training PPL : 81.199634596681	
+Validation PPL : 113.41367240956	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #96 :	
+learning rate	0.0380024	
+Speed : 0.010100 sec/batch 	
+Training PPL : 80.967635791002	
+Validation PPL : 113.71447336681	
+	
+Epoch #97 :	
+learning rate	0.037877425	
+Speed : 0.009717 sec/batch 	
+Training PPL : 80.755974238481	
+Validation PPL : 113.59511199904	
+	
+Epoch #98 :	
+learning rate	0.03775245	
+Speed : 0.009526 sec/batch 	
+Training PPL : 80.47955331453	
+Validation PPL : 113.57652317593	
+	
+Epoch #99 :	
+learning rate	0.037627475	
+Speed : 0.009744 sec/batch 	
+Training PPL : 80.393509343002	
+Validation PPL : 113.54687619773	
+	
+Epoch #100 :	
+learning rate	0.0375025	
+Speed : 0.009966 sec/batch 	
+Training PPL : 80.088332085824	
+Validation PPL : 113.56179737129	
+	
+Epoch #101 :	
+learning rate	0.037377525	
+Speed : 0.010202 sec/batch 	
+Training PPL : 79.915244891444	
+Validation PPL : 113.51971243194	
+	
+Epoch #102 :	
+learning rate	0.03725255	
+Speed : 0.010436 sec/batch 	
+Training PPL : 79.736720819741	
+Validation PPL : 113.36507185719	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #103 :	
+learning rate	0.037127575	
+Speed : 0.010684 sec/batch 	
+Training PPL : 79.590225068597	
+Validation PPL : 113.52666212673	
+	
+Epoch #104 :	
+learning rate	0.0370026	
+Speed : 0.010786 sec/batch 	
+Training PPL : 79.435900469081	
+Validation PPL : 113.79540721539	
+	
+Epoch #105 :	
+learning rate	0.036877625	
+Speed : 0.010518 sec/batch 	
+Training PPL : 79.213440900439	
+Validation PPL : 113.25350886355	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #106 :	
+learning rate	0.03675265	
+Speed : 0.010445 sec/batch 	
+Training PPL : 79.025253340822	
+Validation PPL : 113.22996087911	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #107 :	
+learning rate	0.036627675	
+Speed : 0.010353 sec/batch 	
+Training PPL : 78.751310145683	
+Validation PPL : 113.42723872524	
+	
+Epoch #108 :	
+learning rate	0.0365027	
+Speed : 0.010207 sec/batch 	
+Training PPL : 78.599934921455	
+Validation PPL : 113.66051252608	
+	
+Epoch #109 :	
+learning rate	0.036377725	
+Speed : 0.010013 sec/batch 	
+Training PPL : 78.465771459407	
+Validation PPL : 113.40866606989	
+	
+Epoch #110 :	
+learning rate	0.03625275	
+Speed : 0.010117 sec/batch 	
+Training PPL : 78.407991065054	
+Validation PPL : 113.34335413586	
+	
+Epoch #111 :	
+learning rate	0.036127775	
+Speed : 0.010522 sec/batch 	
+Training PPL : 78.085141567276	
+Validation PPL : 113.43634760483	
+	
+Epoch #112 :	
+learning rate	0.0360028	
+Speed : 0.010934 sec/batch 	
+Training PPL : 77.903288856834	
+Validation PPL : 113.45504807263	
+	
+Epoch #113 :	
+learning rate	0.035877825	
+Speed : 0.011365 sec/batch 	
+Training PPL : 77.814792342375	
+Validation PPL : 113.46498715338	
+	
+Epoch #114 :	
+learning rate	0.03575285	
+Speed : 0.011791 sec/batch 	
+Training PPL : 77.654612129617	
+Validation PPL : 113.34420380844	
+	
+Epoch #115 :	
+learning rate	0.035627875	
+Speed : 0.012260 sec/batch 	
+Training PPL : 77.522581801585	
+Validation PPL : 113.48706879154	
+	
+Epoch #116 :	
+learning rate	0.0355029	
+Speed : 0.012182 sec/batch 	
+Training PPL : 77.362965624729	
+Validation PPL : 113.38123033951	
+	
+Epoch #117 :	
+learning rate	0.035377925	
+Speed : 0.012158 sec/batch 	
+Training PPL : 77.069919359601	
+Validation PPL : 113.71475058084	
+	
+Epoch #118 :	
+learning rate	0.03525295	
+Speed : 0.012025 sec/batch 	
+Training PPL : 77.00435485251	
+Validation PPL : 113.22815856136	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #119 :	
+learning rate	0.035127975	
+Speed : 0.011924 sec/batch 	
+Training PPL : 76.793584120253	
+Validation PPL : 113.4756429204	
+	
+Epoch #120 :	
+learning rate	0.035003	
+Speed : 0.011779 sec/batch 	
+Training PPL : 76.651714919826	
+Validation PPL : 113.38773369609	
+	
+Epoch #121 :	
+learning rate	0.034878025	
+Speed : 0.011674 sec/batch 	
+Training PPL : 76.512869281988	
+Validation PPL : 113.34959356095	
+	
+Epoch #122 :	
+learning rate	0.03475305	
+Speed : 0.011745 sec/batch 	
+Training PPL : 76.455427672863	
+Validation PPL : 113.13390134014	
+Found new minima. Saving to /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7	
+	
+Epoch #123 :	
+learning rate	0.034628075	
+Speed : 0.012261 sec/batch 	
+Training PPL : 76.214050914792	
+Validation PPL : 113.46674646743	
+	
+Epoch #124 :	
+learning rate	0.0345031	
+Speed : 0.012619 sec/batch 	
+Training PPL : 76.057736440352	
+Validation PPL : 113.18884946259	
+	
+Epoch #125 :	
+learning rate	0.034378125	
+Speed : 0.012894 sec/batch 	
+Training PPL : 75.96549492612	
+Validation PPL : 113.35139333795	
+	
+Epoch #126 :	
+learning rate	0.03425315	
+Speed : 0.012928 sec/batch 	
+Training PPL : 75.828707425975	
+Validation PPL : 113.57192808753	
+	
+Epoch #127 :	
+learning rate	0.034128175	
+Speed : 0.013145 sec/batch 	
+Training PPL : 75.881692499776	
+Validation PPL : 113.63741200164	
+	
+Epoch #128 :	
+learning rate	0.0340032	
+Speed : 0.012955 sec/batch 	
+Training PPL : 75.497801094799	
+Validation PPL : 113.13692797537	
+	
+Epoch #129 :	
+learning rate	0.033878225	
+Speed : 0.012626 sec/batch 	
+Training PPL : 75.589864252208	
+Validation PPL : 113.40744385272	
+	
+Epoch #130 :	
+learning rate	0.03375325	
+Speed : 0.012130 sec/batch 	
+Training PPL : 75.147317377251	
+Validation PPL : 113.28928871079	
+	
+Epoch #131 :	
+learning rate	0.033628275	
+Speed : 0.011685 sec/batch 	
+Training PPL : 75.11543798368	
+Validation PPL : 113.45065119278	
+	
+Epoch #132 :	
+learning rate	0.0335033	
+Speed : 0.011206 sec/batch 	
+Training PPL : 75.08315075091	
+Validation PPL : 113.295385413	
+	
+Epoch #133 :	
+learning rate	0.033378325	
+Speed : 0.010950 sec/batch 	
+Training PPL : 74.986416785768	
+Validation PPL : 113.63737006895	
+	
+Epoch #134 :	
+learning rate	0.03325335	
+Speed : 0.010760 sec/batch 	
+Training PPL : 74.724804920328	
+Validation PPL : 113.5927646122	
+	
+Epoch #135 :	
+learning rate	0.033128375	
+Speed : 0.010773 sec/batch 	
+Training PPL : 74.651369020399	
+Validation PPL : 113.33937461536	
+	
+Epoch #136 :	
+learning rate	0.0330034	
+Speed : 0.010963 sec/batch 	
+Training PPL : 74.628721593682	
+Validation PPL : 113.49148521691	
+	
+Epoch #137 :	
+learning rate	0.032878425	
+Speed : 0.011067 sec/batch 	
+Training PPL : 74.445898004386	
+Validation PPL : 113.56346337851	
+	
+Epoch #138 :	
+learning rate	0.03275345	
+Speed : 0.011149 sec/batch 	
+Training PPL : 74.378597036674	
+Validation PPL : 113.68197334221	
+	
+Epoch #139 :	
+learning rate	0.032628475	
+Speed : 0.011251 sec/batch 	
+Training PPL : 74.256391457235	
+Validation PPL : 113.77161506032	
+	
+Epoch #140 :	
+learning rate	0.0325035	
+Speed : 0.011263 sec/batch 	
+Training PPL : 74.083396949368	
+Validation PPL : 113.63074706527	
+	
+Epoch #141 :	
+learning rate	0.032378525	
+Speed : 0.010908 sec/batch 	
+Training PPL : 73.999162943806	
+Validation PPL : 113.60544674638	
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Validation PPL : 113.6885078399	
+	
+Epoch #147 :	
+learning rate	0.031628675	
+Speed : 0.009459 sec/batch 	
+Training PPL : 73.316216389597	
+Validation PPL : 113.59665946962	
+	
+Epoch #148 :	
+learning rate	0.0315037	
+Speed : 0.009726 sec/batch 	
+Training PPL : 73.374872276183	
+Validation PPL : 113.51258325958	
+	
+Epoch #149 :	
+learning rate	0.031378725	
+Speed : 0.009988 sec/batch 	
+Training PPL : 73.17270057794	
+Validation PPL : 113.62416297659	
+	
+Epoch #150 :	
+learning rate	0.03125375	
+Speed : 0.010249 sec/batch 	
+Training PPL : 73.05190807221	
+Validation PPL : 113.74893026079	
+	
+Epoch #151 :	
+learning rate	0.031128775	
+Speed : 0.010550 sec/batch 	
+Training PPL : 73.008142530584	
+Validation PPL : 113.96152919674	
+	
+Epoch #152 :	
+learning rate	0.0310038	
+Speed : 0.010709 sec/batch 	
+Training PPL : 73.010381225781	
+Validation PPL : 113.6896142368	
+	
+Epoch #153 :	
+learning rate	0.030878825	
+Speed : 0.010465 sec/batch 	
+Training PPL : 72.696070203858	
+Validation PPL : 113.62169353219	
+	
+Epoch #154 :	
+learning rate	0.03075385	
+Speed : 0.010304 sec/batch 	
+Training PPL : 72.563772766152	
+Validation PPL : 113.85495768911	
+	
+Epoch #155 :	
+learning rate	0.030628875	
+Speed : 0.010178 sec/batch 	
+Training PPL : 72.656336709594	
+Validation PPL : 113.81100981352	
+	
+Epoch #156 :	
+learning rate	0.0305039	
+Speed : 0.010055 sec/batch 	
+Training PPL : 72.453952797506	
+Validation PPL : 113.59259257365	
+	
+Epoch #157 :	
+learning rate	0.030378925	
+Speed : 0.009983 sec/batch 	
+Training PPL : 72.366903502074	
+Validation PPL : 113.77518249907	
+	
+Epoch #158 :	
+learning rate	0.03025395	
+Speed : 0.009857 sec/batch 	
+Training PPL : 72.266585141038	
+Validation PPL : 113.79289887645	
+	
+Epoch #159 :	
+learning rate	0.030128975	
+Speed : 0.010014 sec/batch 	
+Training PPL : 72.261384007395	
+Validation PPL : 113.70859600823	
+	
+Epoch #160 :	
+learning rate	0.030004	
+Speed : 0.010467 sec/batch 	
+Training PPL : 72.178470283932	
+Validation PPL : 113.6520717629	
+	
+Epoch #161 :	
+learning rate	0.029879025	
+Speed : 0.010913 sec/batch 	
+Training PPL : 72.047807755272	
+Validation PPL : 113.85420336454	
+	
+Epoch #162 :	
+learning rate	0.02975405	
+Speed : 0.011331 sec/batch 	
+Training PPL : 71.872591318004	
+Validation PPL : 113.48382342008	
+	
+Epoch #163 :	
+learning rate	0.029629075	
+Speed : 0.011699 sec/batch 	
+Training PPL : 71.888199607545	
+Validation PPL : 113.5892068931	
+	
+Epoch #164 :	
+learning rate	0.0295041	
+Speed : 0.012166 sec/batch 	
+Training PPL : 71.64766384029	
+Validation PPL : 113.82037485572	
+	
+Epoch #165 :	
+learning rate	0.029379125	
+Speed : 0.012187 sec/batch 	
+Training PPL : 71.724838199266	
+Validation PPL : 113.77960759595	
+	
+Epoch #166 :	
+learning rate	0.02925415	
+Speed : 0.012055 sec/batch 	
+Training PPL : 71.669054662866	
+Validation PPL : 113.94190503905	
+	
+Epoch #167 :	
+learning rate	0.029129175	
+Speed : 0.011839 sec/batch 	
+Training PPL : 71.514937222549	
+Validation PPL : 113.95077131622	
+	
+Epoch #168 :	
+learning rate	0.0290042	
+Speed : 0.011656 sec/batch 	
+Training PPL : 71.530409238829	
+Validation PPL : 114.08751620474	
+	
+Epoch #169 :	
+learning rate	0.028879225	
+Speed : 0.011367 sec/batch 	
+Training PPL : 71.377385640979	
+Validation PPL : 114.04865811272	
+	
+Epoch #170 :	
+learning rate	0.02875425	
+Speed : 0.011076 sec/batch 	
+Training PPL : 71.179006879669	
+Validation PPL : 113.5276751437	
+	
+Epoch #171 :	
+learning rate	0.028629275	
+Speed : 0.010835 sec/batch 	
+Training PPL : 71.202252765962	
+Validation PPL : 114.01462462605	
+	
+Epoch #172 :	
+learning rate	0.0285043	
+Speed : 0.011165 sec/batch 	
+Training PPL : 71.060987442034	
+Validation PPL : 114.04104361202	
+	
+Epoch #173 :	
+learning rate	0.028379325	
+Speed : 0.011323 sec/batch 	
+Training PPL : 71.012798548533	
+Validation PPL : 113.84851339238	
+	
+Epoch #174 :	
+learning rate	0.02825435	
+Speed : 0.011547 sec/batch 	
+Training PPL : 70.959337087101	
+Validation PPL : 113.7272310752	
+	
+Epoch #175 :	
+learning rate	0.028129375	
+Speed : 0.011822 sec/batch 	
+Training PPL : 70.863292179246	
+Validation PPL : 114.32375472915	
+	
+Epoch #176 :	
+learning rate	0.0280044	
+Speed : 0.012130 sec/batch 	
+Training PPL : 70.739720831364	
+Validation PPL : 113.93207376838	
+	
+Epoch #177 :	
+learning rate	0.027879425	
+Speed : 0.012101 sec/batch 	
+Training PPL : 70.646602828586	
+Validation PPL : 114.24836238719	
+	
+Epoch #178 :	
+learning rate	0.02775445	
+Speed : 0.011751 sec/batch 	
+Training PPL : 70.712258927238	
+Validation PPL : 114.36474880721	
+	
+Epoch #179 :	
+learning rate	0.027629475	
+Speed : 0.011448 sec/batch 	
+Training PPL : 70.709143863782	
+Validation PPL : 114.1279973354	
+	
+Epoch #180 :	
+learning rate	0.0275045	
+Speed : 0.011256 sec/batch 	
+Training PPL : 70.488800956303	
+Validation PPL : 114.24562970859	
+	
+Epoch #181 :	
+learning rate	0.027379525	
+Speed : 0.010905 sec/batch 	
+Training PPL : 70.41390273312	
+Validation PPL : 114.54502210317	
+	
+Epoch #182 :	
+learning rate	0.02725455	
+Speed : 0.009073 sec/batch 	
+Training PPL : 70.431393817887	
+Validation PPL : 114.32498271671	
+	
+Epoch #183 :	
+learning rate	0.027129575	
+Speed : 0.008956 sec/batch 	
+Training PPL : 70.283248869571	
+Validation PPL : 114.0586620305	
+	
+Epoch #184 :	
+learning rate	0.0270046	
+Speed : 0.008865 sec/batch 	
+Training PPL : 70.137592234554	
+Validation PPL : 113.76866408404	
+	
+Epoch #185 :	
+learning rate	0.026879625	
+Speed : 0.008658 sec/batch 	
+Training PPL : 70.08957332312	
+Validation PPL : 114.41308536441	
+	
+Epoch #186 :	
+learning rate	0.02675465	
+Speed : 0.008534 sec/batch 	
+Training PPL : 70.067170462354	
+Validation PPL : 114.35972483411	
+	
+Epoch #187 :	
+learning rate	0.026629675	
+Speed : 0.008426 sec/batch 	
+Training PPL : 69.88208287048	
+Validation PPL : 114.36892741414	
+	
+Epoch #188 :	
+learning rate	0.0265047	
+Speed : 0.008446 sec/batch 	
+Training PPL : 69.873841549461	
+Validation PPL : 114.04235234151	
+	
+Epoch #189 :	
+learning rate	0.026379725	
+Speed : 0.008431 sec/batch 	
+Training PPL : 69.943885673101	
+Validation PPL : 114.1516680157	
+	
+Epoch #190 :	
+learning rate	0.02625475	
+Speed : 0.008393 sec/batch 	
+Training PPL : 69.766523660046	
+Validation PPL : 114.40899260178	
+	
+Epoch #191 :	
+learning rate	0.026129775	
+Speed : 0.008413 sec/batch 	
+Training PPL : 69.669999971369	
+Validation PPL : 114.12475283206	
+	
+Epoch #192 :	
+learning rate	0.0260048	
+Speed : 0.008477 sec/batch 	
+Training PPL : 69.531936854423	
+Validation PPL : 114.83168753649	
+	
+Epoch #193 :	
+learning rate	0.025879825	
+Speed : 0.008449 sec/batch 	
+Training PPL : 69.654045718458	
+Validation PPL : 114.88275948844	
+	
+Epoch #194 :	
+learning rate	0.02575485	
+Speed : 0.006122 sec/batch 	
+Training PPL : 69.606536169302	
+Validation PPL : 114.17283763408	
+	
+Epoch #195 :	
+learning rate	0.025629875	
+Speed : 0.006147 sec/batch 	
+Training PPL : 69.541142464773	
+Validation PPL : 114.5135831764	
+	
+Epoch #196 :	
+learning rate	0.0255049	
+Speed : 0.006212 sec/batch 	
+Training PPL : 69.47328332158	
+Validation PPL : 114.47748291646	
+	
+Epoch #197 :	
+learning rate	0.025379925	
+Speed : 0.006249 sec/batch 	
+Training PPL : 69.351583605836	
+Validation PPL : 114.17955807055	
+	
+Epoch #198 :	
+learning rate	0.02525495	
+Speed : 0.006305 sec/batch 	
+Training PPL : 69.21765220395	
+Validation PPL : 114.1538761721	
+	
+Epoch #199 :	
+learning rate	0.025129975	
+Speed : 0.006376 sec/batch 	
+Training PPL : 69.235636916867	
+Validation PPL : 113.80776312882	
+	
+Epoch #200 :	
+learning rate	0.025005	
+Speed : 0.006446 sec/batch 	
+Training PPL : 69.125427540178	
+Validation PPL : 114.83702985656	
+	
+Epoch #201 :	
+learning rate	0.024880025	
+Speed : 0.006552 sec/batch 	
+Training PPL : 69.192050738477	
+Validation PPL : 113.94240141322	
+	
+Epoch #202 :	
+learning rate	0.02475505	
+Speed : 0.006590 sec/batch 	
+Training PPL : 69.028692943484	
+Validation PPL : 114.19000637021	
+	
+Epoch #203 :	
+learning rate	0.024630075	
+Speed : 0.006710 sec/batch 	
+Training PPL : 68.967943312941	
+Validation PPL : 114.92269707515	
+	
+Epoch #204 :	
+learning rate	0.0245051	
+Speed : 0.006797 sec/batch 	
+Training PPL : 68.947328168005	
+Validation PPL : 114.85946966369	
+	
+Epoch #205 :	
+learning rate	0.024380125	
+Speed : 0.006911 sec/batch 	
+Training PPL : 68.970706104717	
+Validation PPL : 114.59093195925	
+	
+Epoch #206 :	
+learning rate	0.02425515	
+Speed : 0.006360 sec/batch 	
+Training PPL : 68.814621826555	
+Validation PPL : 114.10509631243	
+	
+Epoch #207 :	
+learning rate	0.024130175	
+Speed : 0.005491 sec/batch 	
+Training PPL : 68.69848930485	
+Validation PPL : 114.50164282387	
+	
+Epoch #208 :	
+learning rate	0.0240052	
+Speed : 0.005260 sec/batch 	
+Training PPL : 68.625811235375	
+Validation PPL : 114.56864527399	
+	
+Epoch #209 :	
+learning rate	0.023880225	
+Speed : 0.005073 sec/batch 	
+Training PPL : 68.621703129168	
+Validation PPL : 114.79192623741	
+	
+Epoch #210 :	
+learning rate	0.02375525	
+Speed : 0.004915 sec/batch 	
+Training PPL : 68.575000875697	
+Validation PPL : 114.62337108849	
+	
+Epoch #211 :	
+learning rate	0.023630275	
+Speed : 0.004828 sec/batch 	
+Training PPL : 68.393013781953	
+Validation PPL : 114.82817684978	
+	
+Epoch #212 :	
+learning rate	0.0235053	
+Speed : 0.004740 sec/batch 	
+Training PPL : 68.537467040821	
+Validation PPL : 114.49319548209	
+	
+Epoch #213 :	
+learning rate	0.023380325	
+Speed : 0.004673 sec/batch 	
+Training PPL : 68.446163690699	
+Validation PPL : 114.64434764204	
+	
+Epoch #214 :	
+learning rate	0.02325535	
+Speed : 0.004614 sec/batch 	
+Training PPL : 68.34418322622	
+Validation PPL : 114.95026732194	
+	
+Epoch #215 :	
+learning rate	0.023130375	
+Speed : 0.004589 sec/batch 	
+Training PPL : 68.254504112257	
+Validation PPL : 115.21577677824	
+	
+Epoch #216 :	
+learning rate	0.0230054	
+Speed : 0.004515 sec/batch 	
+Training PPL : 68.171935303339	
+Validation PPL : 115.30603059739	
+	
+Epoch #217 :	
+learning rate	0.022880425	
+Speed : 0.004500 sec/batch 	
+Training PPL : 68.122178424164	
+Validation PPL : 115.19645254879	
+	
+Epoch #218 :	
+learning rate	0.02275545	
+Speed : 0.004471 sec/batch 	
+Training PPL : 68.131457596129	
+Validation PPL : 114.80441093083	
+	
+Epoch #219 :	
+learning rate	0.022630475	
+Speed : 0.004459 sec/batch 	
+Training PPL : 67.999314247803	
+Validation PPL : 114.67866205224	
+	
+Epoch #220 :	
+learning rate	0.0225055	
+Speed : 0.004471 sec/batch 	
+Training PPL : 68.088817689201	
+Validation PPL : 115.16810050441	
+	
+Epoch #221 :	
+learning rate	0.022380525	
+Speed : 0.004376 sec/batch 	
+Training PPL : 67.985889739395	
+Validation PPL : 115.05568527397	
+	
+Epoch #222 :	
+learning rate	0.02225555	
+Speed : 0.004374 sec/batch 	
+Training PPL : 67.888731600651	
+Validation PPL : 114.55516963784	
+No new minima found after 100 epochs.	
+Stopping experiment.	
+Evaluate model using : 	
+th scripts/evaluate-rnnlm.lua --xplogpath /home/yochaiz@st.technion.ac.il/hw3/save/rnnlm/ptb:ml10:1485099782:1.t7 --cuda	
